@@ -21,9 +21,12 @@ pip3 install -r requirement.txt
 
 ### Variables d'environnemments
 
-* Définisser ces variables d'environnement:
-    
-    `export SECRET_KEY=*****`
+* Définisser les variables d'environnements dans un fichier .env à la base du projet:
+
+```
+    SECRET_KEY=*****
+
+```
 
 ## Lancement
 

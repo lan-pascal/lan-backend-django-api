@@ -16,8 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
 class UserSignUpSerializer(serializers.ModelSerializer):
-    email_confirm = serializers.EmailField(label="Confirm Email",  required=False)
-    password_confirm = serializers.CharField(label="Confirm Password")
+    email_confirm = serializers.EmailField(label="Confirm Email",  required=True)
+    password_confirm = serializers.CharField(label="Confirm Password", required=True)
     class Meta:
         model = User
         fields = ('username', "first_name", "last_name", 'email',"email_confirm", "password","password_confirm")

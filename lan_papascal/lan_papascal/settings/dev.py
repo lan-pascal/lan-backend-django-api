@@ -15,9 +15,9 @@ from dotenv import load_dotenv, find_dotenv
 from . import DEBUG
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(BASE_DIR))
+PROJECT_DIR = os.path.dirname(BASE_DIR)
 
 #.env
 dotenv_path=(os.path.join(PROJECT_DIR,".env"))

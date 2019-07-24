@@ -151,7 +151,7 @@ OAUTH2_PROVIDER = {
 
 
 AUTHENTICATION_BACKENDS = ( 
-    'django.contrib.auth.backends.ModelBackend',
+    'accounts.backends.AccountsBackend',
     'oauth2_provider.backends.OAuth2Backend',
 )
 

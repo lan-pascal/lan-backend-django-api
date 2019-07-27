@@ -11,7 +11,7 @@ class IsUserOrReadOnlyIfPublic(permissions.BasePermission):
         # so we'll always allow GET, HEAD or OPTIONS requests.
 
         if request.method in permissions.SAFE_METHODS:
-            return obj.IsPublic
+            return obj.is_public
 
         # Instance must be the `user`.
         return obj == request.user

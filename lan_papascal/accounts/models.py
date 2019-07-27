@@ -8,6 +8,6 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     bio = models.CharField(max_length=1000,blank=True)
 
-    isPublic = models.BooleanField(default=True)
+    is_public = models.BooleanField(default=True)
 
     

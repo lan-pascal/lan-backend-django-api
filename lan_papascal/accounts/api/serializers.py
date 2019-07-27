@@ -10,10 +10,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', "first_name", "last_name", 'email', "password")
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+        fields = ('username', "first_name", "last_name", 'email', 'bio')
 
 class UserSignUpSerializer(serializers.ModelSerializer):
     email_confirm = serializers.EmailField(label="Confirm Email",  required=True)

@@ -6,5 +6,8 @@ from django.utils.translation import gettext as _
 class User(AbstractUser):
     #avatar = models.ImageField()
     email = models.EmailField(unique=True)
-    bio = models.CharField(max_length=1000, default="")
+    bio = models.CharField(max_length=1000,blank=True)
+
+    isPublic = models.BooleanField(default=True)
+
     

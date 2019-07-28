@@ -9,9 +9,10 @@ class IsUserOrReadOnlyIfPublic(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
+        isObjUser = obj == request.user
 
         if request.method in permissions.SAFE_METHODS:
-            return obj.is_public
-
-        # Instance must be the `user`.
-        return obj == request.user
+            return obj.is_public or isObjUser
+        else:
+            # Instance must be the `user`.
+            return isObjUser

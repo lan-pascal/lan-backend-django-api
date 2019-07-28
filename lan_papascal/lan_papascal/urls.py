@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    path('v1/accounts/',include('accounts.api.urls')),
+    #path('v1/accounts/',include('accounts.api.urls')),
+    path('schema/',include('schema.urls'))
 ]

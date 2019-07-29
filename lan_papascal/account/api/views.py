@@ -1,18 +1,9 @@
-from django.contrib.auth import get_user_model, authenticate
-from django.urls import path, include
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+from django.contrib.auth import get_user_model
 
-import requests
-
-from rest_framework import serializers, permissions, generics, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import serializers, generics, permissions
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 
-from ..conf import settings
-
-from .serializers import UserSerializer, UserSignUpSerializer, UserSignInSerializer
+from .serializers import UserSerializer
 from .permissions import IsUserOrReadOnlyIfPublic
 
 User = get_user_model()

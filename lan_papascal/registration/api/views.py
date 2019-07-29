@@ -1,4 +1,10 @@
 
+from rest_framework.views import generics
+from rest_framework.response import Response
+
+from .serializers import SignUpSerializer, SignInSerializer, PasswordChangeSerializer
+from ..conf import settings
+
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
     authentication_classes = ()
@@ -33,7 +39,7 @@ class SignUpView(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SignInView(APIView):
+class SignInView(generics.GenericAPIView):
     serializer_class = SignInSerializer
     authentication_classes = ()
     permission_classes = ()
@@ -68,7 +74,7 @@ class SignInView(APIView):
         
         return Response(r.json(),status=r.status_code)
 
-class RefreshTokenView(APIView):
+class RefreshTokenView(generics.GenericAPIView):
     authentication_classes = ()
     permission_classes = ()
 
@@ -91,7 +97,7 @@ class RefreshTokenView(APIView):
         return Response(r.json())
 
 
-class RevokeTokenView(APIView):
+class RevokeTokenView(generics.GenericAPIView):
     authentication_classes = ()
     permission_classes = ()
 

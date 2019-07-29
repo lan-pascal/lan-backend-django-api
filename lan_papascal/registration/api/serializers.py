@@ -1,3 +1,11 @@
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+
+from rest_framework.views import generics
+from rest_framework.exceptions import ValidationError
+
+User = get_user_model()
+
 class SignUpSerializer(serializers.ModelSerializer):
     email_confirm = serializers.EmailField(label="Confirm Email",  required=True)
     password_confirm = serializers.CharField(label="Confirm Password", required=True)

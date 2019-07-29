@@ -1,5 +1,5 @@
+from django.contrib.auth import get_user_model, authenticate
 from django.urls import path, include
-from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
@@ -10,25 +10,23 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 
-from django.core import signing
+from ..conf import settings
 
 from .serializers import UserSerializer, UserSignUpSerializer, UserSignInSerializer
-from .permissions import IsUserOrReadOnly, CanOnlyCreateOrDeleteOrUpdate
+from .permissions import IsUserOrReadOnlyIfPublic
 
-from lan_papascal.settings import CLIENT_ID, CLIENT_SECRET, BASE_URL
+User = get_user_model()
 
 class UserList(generics.ListAPIView):
-    permission_classes = [CanOnlyCreateOrDeleteOrUpdate, TokenHasReadWriteScope]
+    permission_classes = [permissions.IsAdminUser & TokenHasReadWriteScope]
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
+    
 class UserDetails(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsUserOrReadOnly, TokenHasReadWriteScope]
-    serializer_class = UserSerializer
-
-    def get_queryset(self):
-        email = self.request.user.email
-        return User.objects.filter(email = email)
+    permission_classes = [IsUserOrReadOnlyIfPublic & TokenHasReadWriteScope]
+    serializer_class = UserSerializer(partial_update=True)
+    queryset = User.objects.all()
+    lookup_field = "username"
 
 class SignUp(generics.GenericAPIView):
     serializer_class = UserSignUpSerializer
@@ -38,25 +36,29 @@ class SignUp(generics.GenericAPIView):
     def post(self, request, format = None):
         '''
         Registers user to the server. Input should be in the format:
-        {"username": "username", "password": "1234abcd"}
         '''
-        serializer = UserSignUpSerializer(data = request.data)
+        serializer = self.get_serializer(self, data = request.data)
 
         if serializer.is_valid(): 
            
+            serializer.save()
+
             r = requests.post(f'{BASE_URL}/o/token/', 
                 data = {
                     'grant_type': 'password', 
                     'username': request.data['username'], 
                     'password': request.data['password'], 
-                    'client_id': CLIENT_ID, 
-                    'client_secret': CLIENT_SECRET, 
+                    'client_id':settings.CLIENT_ID, 
+                    'client_secret': settings.CLIENT_SECRET, 
                 }, 
-            ) 
+            )
 
-            serializer.save()
+            if not r:
+                json = r.json()
+                error =  {"errors":{"title":json["errors"]["error"],"detail":json["errors"]["error_handling"], "status": r.status_code}}
+                return Response(error,status=r.status_code)
 
-            return Response(r.json(),status=status.HTTP_201_CREATED)
+            return Response(r.json(),status=r.status_code)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -67,23 +69,33 @@ class SignIn(APIView):
 
     def post(self, request, format = None):
         '''
-        Gets tokens with username and password. Input should be in the format:
-        {"username": "username", "password": "1234abcd"}
+        Gets tokens with username/email and password. Input should be in the format:
+        {"username": "username", "password": "1234abcd"} 
+        or
+        {"email":"username@example.com","password":"1234abcd"}
         '''
+        serializer = self.get_serializer(self, data = request.data)
+        serializer.is_valid(raise_exception=True)
+
+        username = request.POST.get('username', None)
+        email = request.POST.get('email', None)
+
         r = requests.post(f'{BASE_URL}/o/token/', 
             data = {
                 'grant_type': 'password', 
-                'username': request.data['username'], 
-                'password': request.data['password'], 
-                'client_id': CLIENT_ID, 
-                'client_secret': CLIENT_SECRET, 
+                'username': user.username, 
+                'password': password, 
+                'client_id': settings.CLIENT_ID, 
+                'client_secret': settings.CLIENT_SECRET, 
             }, 
         )
 
-        encrypted = signing.dumps(r.json())
-        resp = Response(status=status.HTTP_201_CREATED)
-        resp.set_cookie("access",encrypted, samesite="Strict", max_age=1800)
-        return resp
+        if not r.ok:
+            json = r.json()
+            error =  {"errors":{"title":json["errors"]["error"],"detail":json["errors"]["error_handling"], "status": r.status_code}}
+            return Response(error,status=r.status_code)
+        
+        return Response(r.json(),status=r.status_code)
 
 class RefreshToken(APIView):
     authentication_classes = ()
@@ -92,17 +104,19 @@ class RefreshToken(APIView):
     def post(self, request, format = None):
         '''
         Registers user to the server. Input should be in the format:
-        {"refresh_token": " < token > "}
+        {"token":<token>,"refresh_token": " < refresh_token > "}
         '''
         r = requests.post(
         f'{BASE_URL}/o/token/', 
             data = {
                 'grant_type': 'refresh_token', 
                 'refresh_token': request.data['refresh_token'], 
-                'client_id': CLIENT_ID, 
-                'client_secret': CLIENT_SECRET, 
+                'client_id': settings.CLIENT_ID, 
+                'client_secret': settings.CLIENT_SECRET, 
             }, 
         )
+
+        RevokeToken().post(self,request,format)
         return Response(r.json())
 
 
@@ -119,8 +133,8 @@ class RevokeToken(APIView):
             f'{BASE_URL}/o/revoke_token/', 
             data = {
                 'token': request.data['token'], 
-                'client_id': CLIENT_ID, 
-                'client_secret': CLIENT_SECRET, 
+                'client_id': settings.CLIENT_ID, 
+                'client_secret': settings.CLIENT_SECRET, 
             }, 
         )
         # If it goes well return success message (would be empty otherwise) 

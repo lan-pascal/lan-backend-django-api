@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
 
     #Apps
-    'schema.apps.SchemaConfig'
+    'accounts.apps.AccountsConfig',
     'schema.apps.SchemaConfig',
 ]
 

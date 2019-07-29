@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
 
     #Apps
-    'accounts.apps.AccountsConfig',
+    'account.apps.AccountConfig',
     'schema.apps.SchemaConfig',
 ]
 
@@ -112,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'account.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -184,7 +184,6 @@ OAUTH2_PROVIDER = {
 
 
 AUTHENTICATION_BACKENDS = ( 
-    'accounts.backends.AccountsBackend',
     'django.contrib.auth.backends.ModelBackend',
     'oauth2_provider.backends.OAuth2Backend',
 )

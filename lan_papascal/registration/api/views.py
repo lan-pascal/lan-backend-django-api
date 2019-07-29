@@ -1,5 +1,5 @@
 
-class SignUp(generics.GenericAPIView):
+class SignUpView(generics.GenericAPIView):
     serializer_class = UserSignUpSerializer
     authentication_classes = ()
     permission_classes = ()
@@ -33,7 +33,7 @@ class SignUp(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SignIn(APIView):
+class SignInView(APIView):
     serializer_class = UserSignInSerializer
     authentication_classes = ()
     permission_classes = ()
@@ -68,7 +68,7 @@ class SignIn(APIView):
         
         return Response(r.json(),status=r.status_code)
 
-class RefreshToken(APIView):
+class RefreshTokenView(APIView):
     authentication_classes = ()
     permission_classes = ()
 
@@ -91,7 +91,7 @@ class RefreshToken(APIView):
         return Response(r.json())
 
 
-class RevokeToken(APIView):
+class RevokeTokenView(APIView):
     authentication_classes = ()
     permission_classes = ()
 

@@ -1,11 +1,11 @@
 from django.urls import path, include
 
-from .views import SignIn, SignUp, RefreshToken, RevokeToken
+from .views import SignInView, SignUpView, RefreshTokenView, RevokeTokenView
 
 
 urlpatterns = [
-    path('signin/', SignIn.as_view(), name="sign-in"),
-    path('signup/', SignUp.as_view(), name="sign-up"),
-    path('refresh_token/', RefreshToken.as_view(), name="refresh-token"),
-    path('revoke_token/', RevokeToken.as_view(), name="revoke-token"),
+    path('signin/', SignInView.as_view(), name="sign-in"),
+    path('signup/', SignUpView.as_view(), name="sign-up"),
+    path('refresh_token/', RefreshTokenView.as_view(), name="refresh-token"),
+    path('revoke_token/', RevokeTokenView.as_view(), name="revoke-token"),
 ]

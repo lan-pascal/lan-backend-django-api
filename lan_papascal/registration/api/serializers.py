@@ -81,33 +81,28 @@ class SignInSerializer(serializers.ModelSerializer):
     
 class PasswordChangeSerializer(serializers.ModelSerializer):
     old_password = serializers.CharField(label="Old Password", required=True)
-    new_password = serializers.CharField(label="New Password", required=True)
-    new_password_confirmW = serializers.CharField(label="Confirm New Password", required=True)
+    new_password1 = serializers.CharField(label="New Password", required=True)
+    new_password2 = serializers.CharField(label="Confirm New Password", required=True)
+
+    form_password_change_class = PasswordChangeForm
 
     class Meta:
         model = User
         fields = ("old_password","new_password","new_password_confirm")}
 
-    def validate_old_password(self, value):
-        invalid_password_conditions = (
-            self.user,
-            not self.user.check_password(value)
+    def __init__(self, *args, **kwargs):
+        self.request = self.context.request
+        self.user = getattr(self.request,"user", None)
+
+    def validate(self,data):
+        self.form_password_change = self.form_password_change_class(
+            user=self.user, data=data
         )
+        
+        if not self.form_password_change.is_valid():
+            return ValidationError(self.form_password_change.errors)
+        
+        return data
 
-        if all(invalid_password_conditions):
-            err_msg = ("Your old password is invalid.")
-            raise ValidationError(err_msg)
-        return value
-
-    def validate_new_password(self, value):
-        new_password = value
-        validate_password(new_password,self.user)
-        return value
-
-    def validate_new_password_confirm(self, value):
-        data = self.get_initial()
-        password = data.get("password")
-        password_confirm = value
-        if password != password_confirm:
-            raise ValidationError("The passwords don't match!", code="password_confirmation_error")
-        return value
+    def save(self):
+        self.form_password_change.save()

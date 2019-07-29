@@ -2,8 +2,13 @@ from django.urls import path, include
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
+from django.contrib.auth import authenticate
+from django.contrib.auth.password_validation import validate_password
 
 from rest_framework import serializers
+
+from ..conf import settings, AuthMethod
 
 User = get_user_model()
 
@@ -55,7 +60,31 @@ class UserSignUpSerializer(serializers.ModelSerializer):
 class UserSignInSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username',"password")
+        fields = ("username","email","password")
         extra_kwargs = {
+            'username': 
+            {
+                'required': settings.AUTH_BACKEND_METHOD == AuthMethod.USERNAME or settings.AUTH_BACKEND_METHOD == AuthMethod.USERNAME_EMAIL
+            },
+            'email' : 
+            {
+                'required' : settings.AUTH_BACKEND_METHOD == AuthMethod.EMAIL or settings.AUTH_BACKEND_METHOD == AuthMethod.USERNAME_EMAIL
+            },
             'password': {'write_only': True}
         }
+
+    def validate(self, data):
+        username = data["username"]
+        email = data["email"]
+        password = data["passsword"]
+
+        user = authenticate(self.data["request"],username=username,email=email,password=password)
+        
+        if user:
+            if not user.is_active:
+                raise ValidationError("This user account is inactive") 
+        else
+            raise ValidationError("You were unable to sign in with the provided credentials")
+
+        data['user'] = user
+        return value

@@ -68,7 +68,7 @@ ROOT_URLCONF = 'lan_papascal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,"lan_papascal")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

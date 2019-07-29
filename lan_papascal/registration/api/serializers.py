@@ -1,4 +1,4 @@
-class UserSignUpSerializer(serializers.ModelSerializer):
+class SignUpSerializer(serializers.ModelSerializer):
     email_confirm = serializers.EmailField(label="Confirm Email",  required=True)
     password_confirm = serializers.CharField(label="Confirm Password", required=True)
     class Meta:
@@ -38,7 +38,7 @@ class UserSignUpSerializer(serializers.ModelSerializer):
 
         return validated_data
 
-class UserSignInSerializer(serializers.ModelSerializer):
+class SignInSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("username","email","password")
@@ -71,7 +71,7 @@ class UserSignInSerializer(serializers.ModelSerializer):
         return value
 
     
-class UserPasswordChangeSerializer(serializers.ModelSerializer):
+class PasswordChangeSerializer(serializers.ModelSerializer):
     old_password = serializers.CharField(label="Old Password", required=True)
     new_password = serializers.CharField(label="New Password", required=True)
     new_password_confirmW = serializers.CharField(label="Confirm New Password", required=True)

@@ -1,6 +1,6 @@
 
 class SignUpView(generics.GenericAPIView):
-    serializer_class = UserSignUpSerializer
+    serializer_class = SignUpSerializer
     authentication_classes = ()
     permission_classes = ()
 
@@ -34,7 +34,7 @@ class SignUpView(generics.GenericAPIView):
 
 
 class SignInView(APIView):
-    serializer_class = UserSignInSerializer
+    serializer_class = SignInSerializer
     authentication_classes = ()
     permission_classes = ()
 

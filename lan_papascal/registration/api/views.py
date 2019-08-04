@@ -1,5 +1,5 @@
 
-from rest_framework.views import generics
+from rest_framework import generics
 from rest_framework.response import Response
 
 from . import serializers
@@ -126,14 +126,38 @@ class PasswordChangeView(generics.GenericAPIView):
 
     serializer_class = serializers.PasswordChangeSerializer
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": ("Your password has been change successfuly.")}
+        )
+
 class PasswordResetView(generics.GenericAPIView):
     authentication_classes = ()
     permisssion_classes = ()
 
     serializer_class = serializers.PasswordResetSerializer
 
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": ("We have send you an email to reset your password.")}
+        )
+
 class PasswordResetConfirmView(generics.GenericAPIView):
     authentication_classes = ()
     permisssion_classes = ()
 
     serializer_class = serializers.PasswordResetConfirmSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": ("Your password has been reset with the new password.")}
+        )

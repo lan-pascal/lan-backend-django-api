@@ -23,5 +23,6 @@ urlpatterns = [
     path('auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('account/',include('account.api.urls')),
-    path('schema/',include('schema.urls'))
+    path('schema/',include('schema.urls')),
+    path('registration/', include('registration.api.urls'))
 ]

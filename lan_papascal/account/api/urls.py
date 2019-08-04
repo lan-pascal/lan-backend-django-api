@@ -1,6 +1,6 @@
 from django.urls import path, include
 
-from .views import UserList, UserDetails, SignIn, SignUp, RefreshToken, RevokeToken
+from .views import UserList, UserDetails
 
 urlpatterns = [
     #Accounts API

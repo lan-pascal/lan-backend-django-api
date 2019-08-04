@@ -2,11 +2,11 @@
 from rest_framework.views import generics
 from rest_framework.response import Response
 
-from .serializers import SignUpSerializer, SignInSerializer, PasswordChangeSerializer
+from . import serializers
 from ..conf import settings
 
 class SignUpView(generics.GenericAPIView):
-    serializer_class = SignUpSerializer
+    serializer_class = serializers.SignUpSerializer
     authentication_classes = ()
     permission_classes = ()
 
@@ -40,7 +40,7 @@ class SignUpView(generics.GenericAPIView):
 
 
 class SignInView(generics.GenericAPIView):
-    serializer_class = SignInSerializer
+    serializer_class = serializers.SignInSerializer
     authentication_classes = ()
     permission_classes = ()
 
@@ -119,3 +119,21 @@ class RevokeTokenView(generics.GenericAPIView):
             return Response({'message': 'token revoked'}, r.status_code)
         # Return the error if it goes badly
         return Response(r.json(), r.status_code)
+
+class PasswordChangeView(generics.GenericAPIView):
+    authentication_classes = ()
+    permisssion_classes = ()
+
+    serializer_class = serializers.PasswordChangeSerializer
+
+class PasswordResetView(generics.GenericAPIView):
+    authentication_classes = ()
+    permisssion_classes = ()
+
+    serializer_class = serializers.PasswordResetSerializer
+
+class PasswordResetConfirmView(generics.GenericAPIView):
+    authentication_classes = ()
+    permisssion_classes = ()
+
+    serializer_class = serializers.PasswordResetConfirmSerializer

@@ -1,8 +1,10 @@
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm, SetPasswordForm
 
 from rest_framework.views import generics
 from rest_framework.exceptions import ValidationError
+
+from ..conf import settings
 
 User = get_user_model()
 
@@ -53,11 +55,11 @@ class SignInSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'username': 
             {
-                'required': settings.AUTH_BACKEND_METHOD == AuthMethod.USERNAME or settings.AUTH_BACKEND_METHOD == AuthMethod.USERNAME_EMAIL
+                'required': settings.AUTH_BACKEND_METHOD == (AuthMethod.USERNAME | AuthMethod.USERNAME_EMAIL)
             },
             'email' : 
             {
-                'required' : settings.AUTH_BACKEND_METHOD == AuthMethod.EMAIL or settings.AUTH_BACKEND_METHOD == AuthMethod.USERNAME_EMAIL
+                'required' : settings.AUTH_BACKEND_METHOD == (AuthMethod.Email | AuthMethod.USERNAME_EMAIL)
             },
             'password': {'write_only': True}
         }
@@ -79,30 +81,103 @@ class SignInSerializer(serializers.ModelSerializer):
         return value
 
     
-class PasswordChangeSerializer(serializers.ModelSerializer):
+class PasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(label="Old Password", required=True)
     new_password1 = serializers.CharField(label="New Password", required=True)
     new_password2 = serializers.CharField(label="Confirm New Password", required=True)
 
-    form_password_change_class = PasswordChangeForm
+    password_change_form_class = PasswordChangeForm
 
     class Meta:
-        model = User
-        fields = ("old_password","new_password","new_password_confirm")}
+        fields = ("old_password","new_password1","new_password2")}
 
     def __init__(self, *args, **kwargs):
         self.request = self.context.request
         self.user = getattr(self.request,"user", None)
 
     def validate(self,data):
-        self.form_password_change = self.form_password_change_class(
+        self.password_change_form = self.password_change_form_class(
             user=self.user, data=data
         )
         
-        if not self.form_password_change.is_valid():
-            return ValidationError(self.form_password_change.errors)
+        if not self.password_change_form.is_valid():
+            return ValidationError(self.password_change_form.errors)
         
         return data
 
     def save(self):
         self.form_password_change.save()
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    email_template_subject = "registration/email/password_reset_subject.txt"
+    email_template_body = "registration/email/password_reset_body.html"
+
+    password_rest_form_class = PasswordResetForm
+
+    def __init__(self, *args, **kwargs):
+        self.request = self.context.request
+        self.user = self.request.user
+
+    def validate(self,data):
+        self.password_rest_form = self.password_rest_form_class(
+            user=self.user, data=data
+        )
+        
+        if not self.password_rest_form.is_valid():
+            return ValidationError(self.password_rest_form.errors)
+        
+        return data
+
+    def save(self):
+        kwargs = 
+        {
+            'use_https': request.is_secure(),
+            'from_email': settings.DEFAULT_FROM_EMAIL,
+            'request': request,
+            "subject_template_name": email_template_subject,
+            "email_template_name": email_template_body
+        }
+        self.form_password_reset.save(**kwargs)
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    new_password1  = serializers.CharField(required=True)
+    new_password2  = serializers.CharField(required=True)
+    uid = serializer.CharField(required=True)
+    token = serializer.CharField(required=True)
+
+    set_password_form_class = SetPasswordForm
+    token_generator = default_token_generator
+
+    def validate(self,data):
+        uidb64 = data["uidb64"]
+        token = data["token"]
+
+        user = _get_user(uidb64)
+
+        if not self.token_generator.check_token(user,token):
+            raise ValidationError({"invalid_token":"The token provided is invalid!"})
+
+        self.set_password_form_class = self.set_password_form_class(
+            user=self.user, data=data
+        )
+        
+        if not self.set_password_form_class.is_valid():
+            raise ValidationError(self.set_password_form_class.errors)
+        
+        return data
+
+
+    def save(self):
+        self.set_password_form_class.save()
+
+    def _get_user(self,uidb64):
+        try:
+            # urlsafe_base64_decode() decodes to bytestring
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User._default_manager.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
+            raise ValidationError({'uid': ['Invalid value']})
+
+        return user

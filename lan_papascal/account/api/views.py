@@ -15,6 +15,6 @@ class UserList(generics.ListAPIView):
     
 class UserDetails(generics.RetrieveUpdateAPIView):
     permission_classes = [IsUserOrReadOnlyIfPublic & TokenHasReadWriteScope]
-    serializer_class = UserSerializer(partial_update=True)
+    serializer_class = UserSerializer(partial=True)
     queryset = User.objects.all()
     lookup_field = "username"

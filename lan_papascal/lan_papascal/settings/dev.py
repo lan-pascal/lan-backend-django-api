@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     #Apps
     'account.apps.AccountConfig',
     'schema.apps.SchemaConfig',
+    'registration.apps.RegistrationConfig'
 ]
 
 MIDDLEWARE = [

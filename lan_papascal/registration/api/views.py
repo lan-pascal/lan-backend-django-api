@@ -1,14 +1,18 @@
 
-from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 from . import serializers
 from ..conf import settings
 
-class SignUpView(generics.GenericAPIView):
+class SignUpView(GenericAPIView):
     serializer_class = serializers.SignUpSerializer
     authentication_classes = ()
     permission_classes = ()
+
+    def get_queryset(self):
+        pass
 
     def post(self, request, format = None):
         '''
@@ -39,10 +43,13 @@ class SignUpView(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SignInView(generics.GenericAPIView):
+class SignInView(GenericAPIView):
     serializer_class = serializers.SignInSerializer
     authentication_classes = ()
     permission_classes = ()
+
+    def get_queryset(self):
+        pass
 
     def post(self, request, format = None):
         '''
@@ -74,7 +81,7 @@ class SignInView(generics.GenericAPIView):
         
         return Response(r.json(),status=r.status_code)
 
-class RefreshTokenView(generics.GenericAPIView):
+class RefreshTokenView(APIView):
     authentication_classes = ()
     permission_classes = ()
 
@@ -97,9 +104,12 @@ class RefreshTokenView(generics.GenericAPIView):
         return Response(r.json())
 
 
-class RevokeTokenView(generics.GenericAPIView):
+class RevokeTokenView(GenericAPIView):
     authentication_classes = ()
     permission_classes = ()
+
+    def get_queryset(self):
+        pass
 
     def post(self, request, format = None):
         '''
@@ -120,11 +130,13 @@ class RevokeTokenView(generics.GenericAPIView):
         # Return the error if it goes badly
         return Response(r.json(), r.status_code)
 
-class PasswordChangeView(generics.GenericAPIView):
-    authentication_classes = ()
+class PasswordChangeView(GenericAPIView):
     permisssion_classes = ()
 
     serializer_class = serializers.PasswordChangeSerializer
+
+    def get_queryset(self):
+        pass
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -134,11 +146,13 @@ class PasswordChangeView(generics.GenericAPIView):
             {"detail": ("Your password has been change successfuly.")}
         )
 
-class PasswordResetView(generics.GenericAPIView):
-    authentication_classes = ()
+class PasswordResetView(GenericAPIView):
     permisssion_classes = ()
 
     serializer_class = serializers.PasswordResetSerializer
+
+    def get_queryset(self):
+        pass
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -148,11 +162,13 @@ class PasswordResetView(generics.GenericAPIView):
             {"detail": ("We have send you an email to reset your password.")}
         )
 
-class PasswordResetConfirmView(generics.GenericAPIView):
-    authentication_classes = ()
+class PasswordResetConfirmView(GenericAPIView):
     permisssion_classes = ()
 
     serializer_class = serializers.PasswordResetConfirmSerializer
+
+    def get_queryset():
+        pass
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

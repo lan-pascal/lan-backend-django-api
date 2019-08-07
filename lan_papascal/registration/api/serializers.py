@@ -50,39 +50,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return validated_data
 
-class SignInSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ("username","email","password")
-        extra_kwargs = {
-            'username': 
-            {
-                'required ': settings.AUTH_BACKEND_METHOD == (AuthMethod.USERNAME | AuthMethod.USERNAME_EMAIL)
-            },
-            'email' : 
-            {
-                'required' : settings.AUTH_BACKEND_METHOD == (AuthMethod.EMAIL | AuthMethod.USERNAME_EMAIL)
-            },
-            'password': {'write_only': True}
-        }
-
-    def validate(self, data):
-        username = data["username"]
-        email = data["email"]
-        password = data["passsword"]
-
-        user = authenticate(self.data["request"],username=username,email=email,password=password)
-        
-        if user:
-            if not user.is_active:
-                raise ValidationError("This user account is inactive") 
-        else:
-            raise ValidationError("You were unable to sign in with the provided credentials")
-
-        data['user'] = user
-        return value
-
-    
 class PasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(label="Old Password", required=True)
     new_password1 = serializers.CharField(label="New Password", required=True)

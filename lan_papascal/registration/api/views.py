@@ -1,61 +1,60 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework.views import views
-from rest_framework import generics
+from rest_framework import generics, views
 from rest_framework.response import Response
 
 from . import serializers
 from ..conf import settings
 
-class SignUpView(generics.CreateAPIView):
+def _get_serializer(self, *args, **kwargs):
+    serializer_class =  self.serializer_class
+    kwargs["context"] = {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self
+    }
+    return serializer_class(*args,**kwargs)
+
+class SignUp(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
 
     queryset = get_user_model().objects.all()
     serializer_class = serializers.SignUpSerializer
 
-class PasswordChangeView(generics.GenericAPIView):
+class PasswordChangeView(views.APIView):
     permisssion_classes = ()
 
     serializer_class = serializers.PasswordChangeSerializer
 
-    def get_queryset(self):
-        pass
-
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = _get_serializer(self,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
             {"detail": ("Your password has been change successfuly.")}
         )
 
-class PasswordResetView(generics.GenericAPIView):
+class PasswordResetView(views.APIView):
     permisssion_classes = ()
 
     serializer_class = serializers.PasswordResetSerializer
 
-    def get_queryset(self):
-        pass
-
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        serializer = _get_serializer(self,data=request.data)
+        serializer.is_valid(raise_exception=False)
         serializer.save()
         return Response(
             {"detail": ("We have send you an email to reset your password.")}
         )
 
-class PasswordResetConfirmView(generics.GenericAPIView):
+class PasswordResetConfirmView(views.APIView):
     permisssion_classes = ()
 
     serializer_class = serializers.PasswordResetConfirmSerializer
 
-    def get_queryset():
-        pass
-
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = _get_serializer(self,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(

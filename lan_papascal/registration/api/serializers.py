@@ -4,12 +4,13 @@ from django.contrib.auth.tokens import default_token_generator
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.fields import CurrentUserDefault
 
 from ..conf import settings, AuthMethod
 
 User = get_user_model()
 
-class SignUpSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
     email_confirm = serializers.EmailField(label="Confirm Email",  required=True)
     password_confirm = serializers.CharField(label="Confirm Password", required=True)
     class Meta:
@@ -89,13 +90,11 @@ class PasswordChangeSerializer(serializers.Serializer):
 
     password_change_form_class = PasswordChangeForm
 
-    def __init__(self, *args, **kwargs):
-        self.request = self.context.request
-        self.user = getattr(self.request,"user", None)
-
     def validate(self,data):
+        user = self.context["request"].user
+
         self.password_change_form = self.password_change_form_class(
-            user=self.user, data=data
+            user=user, data=data
         )
         
         if not self.password_change_form.is_valid():
@@ -104,33 +103,38 @@ class PasswordChangeSerializer(serializers.Serializer):
         return data
 
     def save(self):
-        self.form_password_change.save()
+        self.password_change_form.save()
 
 class PasswordResetSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)
+    email = serializers.EmailField()
 
     email_template_subject = "registration/email/password_reset_subject.txt"
     email_template_body = "registration/email/password_reset_body.html"
 
-    password_rest_form_class = PasswordResetForm
+    password_reset_form_class = PasswordResetForm
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(args,kwargs)
+        print(self)
+        self.request = kwargs["context"]["request"]
+        print(self)
 
     def validate(self,data):
-        self.password_rest_form = self.password_rest_form_class(data=data)
-        
-        if not self.password_rest_form.is_valid():
-            return ValidationError(self.password_rest_form.errors)
+        self.password_reset_form = self.password_reset_form_class(data=data)
+        if not self.password_reset_form.is_valid():
+            return ValidationError(self.password_reset_form.errors)
         
         return data
 
     def save(self):
         kwargs = {
-            'use_https': request.is_secure(),
+            'use_https': self.request.is_secure(),
             'from_email': settings.DEFAULT_FROM_EMAIL,
-            'request': request,
+            'request': self.request,
             "subject_template_name": email_template_subject,
             "email_template_name": email_template_body
         }
-        self.form_password_reset.save(**kwargs)
+        self.password_reset_form.save(**kwargs)
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     new_password1  = serializers.CharField(required=True)
@@ -150,18 +154,18 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         if not self.token_generator.check_token(user,token):
             raise ValidationError({"invalid_token":"The token provided is invalid!"})
 
-        self.set_password_form_class = self.set_password_form_class(
+        self.set_password_form = self.set_password_form_class(
             user=user, data=data
         )
         
-        if not self.set_password_form_class.is_valid():
-            raise ValidationError(self.set_password_form_class.errors)
+        if not self.set_password_form.is_valid():
+            raise ValidationError(self.set_password_form.errors)
         
         return data
 
 
     def save(self):
-        self.set_password_form_class.save()
+        self.set_password_form.save()
 
     def _get_user(self,uidb64):
         try:

@@ -10,7 +10,7 @@ from ..conf import settings, AuthMethod
 
 User = get_user_model()
 
-class RegisterSerializer(serializers.ModelSerializer):
+class SignUpSerializer(serializers.ModelSerializer):
     email_confirm = serializers.EmailField(label="Confirm Email",  required=True)
     password_confirm = serializers.CharField(label="Confirm Password", required=True)
     class Meta:
@@ -49,7 +49,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return validated_data
-
+    
 class PasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(label="Old Password", required=True)
     new_password1 = serializers.CharField(label="New Password", required=True)

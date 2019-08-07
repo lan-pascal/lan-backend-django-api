@@ -15,7 +15,7 @@ def _get_serializer(self, *args, **kwargs):
     }
     return serializer_class(*args,**kwargs)
 
-class SignUp(generics.CreateAPIView):
+class SignUpView(generics.CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
 

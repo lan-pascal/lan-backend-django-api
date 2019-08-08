@@ -6,49 +6,36 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CurrentUserDefault
 
-from ..conf import settings, AuthMethod
+from ..conf import settings
 
 User = get_user_model()
 
 class SignUpSerializer(serializers.ModelSerializer):
-    email_confirm = serializers.EmailField(label="Confirm Email",  required=True)
-    password_confirm = serializers.CharField(label="Confirm Password", required=True)
     class Meta:
         model = User
-        fields = ('username', "first_name", "last_name", 'email',"email_confirm", "password","password_confirm")
+        fields = ('id','username', "first_name", "last_name", 'email', "password")
         extra_kwargs = {
             'password': {'write_only': True}
         }
-
-    def validate_email_confirm(self, value):
-        data = self.get_initial()
-        email = data.get("email")
-        email_confirm = value
-        if email != email_confirm:
-            raise ValidationError("The emails don't match!", code="email_confirmation_error")
-        return value
-
-    def validate_password_confirm(self, value):
-        data = self.get_initial()
-        password = data.get("password")
-        password_confirm = value
-        if password != password_confirm:
-            raise ValidationError("The passwords don't match!", code="password_confirmation_error")
-        return value
     
     def create(self, validated_data):
         username = validated_data["username"]
         email = validated_data["email"]
         password = validated_data["password"]
 
+        first_name = validated_data["first_name"]
+        last_name = validated_data["last_name"]
+
         user = User(
             username = username,
             email = email,
+            first_name = first_name,
+            last_name = last_name,
             )
         user.set_password(password)
         user.save()
 
-        return validated_data
+        return user
     
 class PasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(label="Old Password", required=True)

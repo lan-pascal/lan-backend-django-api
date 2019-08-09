@@ -42,7 +42,7 @@ class PasswordResetView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         serializer = _get_serializer(self,data=request.data)
-        serializer.is_valid(raise_exception=False)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
             {"detail": ("We have send you an email to reset your password.")}

@@ -67,17 +67,15 @@ class PasswordResetSerializer(serializers.Serializer):
 
     password_reset_form_class = PasswordResetForm
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(args,kwargs)
-        print(self)
-        self.request = kwargs["context"]["request"]
-        print(self)
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+        self.request = self.context["request"]
 
     def validate(self,data):
         self.password_reset_form = self.password_reset_form_class(data=data)
         if not self.password_reset_form.is_valid():
             return ValidationError(self.password_reset_form.errors)
-        
+
         return data
 
     def save(self):
@@ -85,8 +83,8 @@ class PasswordResetSerializer(serializers.Serializer):
             'use_https': self.request.is_secure(),
             'from_email': settings.DEFAULT_FROM_EMAIL,
             'request': self.request,
-            "subject_template_name": email_template_subject,
-            "email_template_name": email_template_body
+            "subject_template_name": self.email_template_subject,
+            "email_template_name": self.email_template_body
         }
         self.password_reset_form.save(**kwargs)
 

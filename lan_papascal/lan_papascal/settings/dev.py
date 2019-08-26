@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     #Plugins
     'rest_framework',
     'oauth2_provider',
+    'widget_tweaks',
 
 
     #Django

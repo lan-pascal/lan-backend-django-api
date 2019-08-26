@@ -35,6 +35,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #Apps
+    'account.apps.AccountConfig',
+    'schema.apps.SchemaConfig',
+    'registration.apps.RegistrationConfig',
+
+    #Plugins
+    'rest_framework',
+    'oauth2_provider',
+
+
     #Django
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,15 +52,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    #Plugins
-    'rest_framework',
-    'oauth2_provider',
-
-    #Apps
-    'account.apps.AccountConfig',
-    'schema.apps.SchemaConfig',
-    'registration.apps.RegistrationConfig'
 ]
 
 MIDDLEWARE = [
@@ -195,3 +196,7 @@ CLIENT_ID = os.environ["CLIENT_ID"]
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]
 
 BASE_URL = "http://localhost:8000"
+
+LOGIN_URL = "/registration/signin/"
+
+LOGIN_REDIRECT_URL ="/"

@@ -1,0 +1,46 @@
+{% extends "registration/base.html" %}
+
+{% block alert %}
+    {% if form.errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if next %}
+        <div class="alert alert-info">
+            {% if user.is_authenticated %}
+                Your account doesn't have access to this page. To proceed,
+                please sign in with an account that has access.
+            {% else %}
+                    Please sign in to see this page.
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content_title %}{% block title %}Sign In{% endblock %}{% endblock %}
+
+{% block content %}
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        {% for field in form.visible_fields %}
+            {% include 'fields/base.html' with field=field %}
+        {% endfor %}
+
+        <div class="mt-n1">
+            <a href="{% url 'password_reset' %}">Forgot password?</a> 
+        </div>
+
+        <div class="pt-4">
+            {% include 'fields/button/submit.html' with name="Sign In"%}
+        </div>
+    </form>
+{% endblock %}

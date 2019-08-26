@@ -25,7 +25,7 @@ urlpatterns = [
     
     #Account related app
     path('account/',include('account.api.urls')),
-    path('account/', include('registration.api.urls')),
+    path('registration/', include('registration.urls')),
 
     #Schema related app
     path('schema/',include('schema.urls')),

@@ -1,0 +1,44 @@
+{% extends 'registration/base.html' %}
+
+{% block content_title %}{% block title %}Sign Up{% endblock %}{% endblock %}
+
+{% block content %}
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+        {% endfor %}
+
+		<div class="row">
+			<div class="col-6 pr-sm-0 pl-2">
+				{% include 'fields/base.html' with field=form.first_name %}
+			</div>
+
+			<div class="col-6 pr-2">
+				{% include 'fields/base.html' with field=form.last_name %}
+			</div>
+		</div>
+
+		<div class="row">
+			{% include 'fields/base.html' with field=form.username %}
+		</div>
+
+		<div class="row">
+			{% include 'fields/base.html' with field=form.email %}
+		</div>
+
+		<div class="row">
+			<div class="col-6">
+				{% include 'fields/base.html' with field=form.password1 %}
+			</div>
+			<div class="col-6">
+				{% include 'fields/base.html' with field=form.password2 %}
+			</div>
+		</div>
+
+        <div class="pt-4">
+			{% include 'fields/button/submit.html' with name="Sign Up" %}
+		</div>
+    </form>
+{% endblock %}

@@ -1,6 +1,8 @@
+{% load widget_tweaks %}
+
 <div class="form-group md-form">
     <label for="{{ field.id_for_label }}" class="text-dark">{{ field.label }}</label>
-    {{ field }}
+    {{ field |add_class:"form-control"|add_error_class:"is-invalid"}}
     <div class="invalid-feedback">
             {% for error in field.errors %}
                <p>{{error}}</p>

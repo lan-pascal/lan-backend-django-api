@@ -3,6 +3,11 @@
 {% block content_title %}{% block title %}Sign Up{% endblock %}{% endblock %}
 
 {% block content %}
+    <div class="row justify-content-center">
+        {% include 'fields/button/link/icon.html' with class="fab fa-2x fa-google" %}
+        {% include 'fields/button/link/icon.html' with class="fab fa-2x fa-facebook" %}
+    </div>
+    <hr/>
     <form method="post" novalidate>
         {% csrf_token %}
 

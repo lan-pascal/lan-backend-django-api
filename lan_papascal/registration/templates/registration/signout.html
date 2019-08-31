@@ -6,5 +6,5 @@
   {% url 'signin' as link %}
 
   <p class="text-center">Your account has been signed out!</p>  
-  {% include "fields/button/link.html" with link=link message="Return to Sign In" %}
+  {% include "fields/button/link/standard.html" with link=link message="Return to Sign In" %}
 {% endblock %}

@@ -1,0 +1,53 @@
+/*BUTTON*/
+.btn.btn-rounded {
+    border-radius: 35px;
+}
+
+.btn.btn-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0px;
+}
+
+.btn-circle.btn-sm {
+    width: 30px;
+    height: 30px;
+}
+
+.btn-circle.btn-lg {
+    width: 70px;
+    height: 70px;
+}
+
+/*Font Awesome*/
+.fab {
+    color: white;
+}
+
+.fa-2x
+{
+    line-height: 1.4
+}
+
+/* Add a hover effect if you want */
+
+.fab:hover {
+    opacity: 0.7;
+    color: white;
+}
+
+/* Set a specific color for each brand */
+
+/* Facebook */
+.fa-facebook {
+    background: #3B5998;
+}
+
+/* Twitter */
+
+.fa-google {
+    background: #DB4437;
+}

@@ -15,30 +15,30 @@
             {{ hidden_field }}
         {% endfor %}
 
-		<div class="row">
-			<div class="col-6 pr-1">
-				{% include 'fields/base.html' with field=form.first_name %}
+		<div class="form-row">
+			<div class="col">
+				{% include 'fields/base.html' with field=form.first_name%}
 			</div>
 
-			<div class="col-6 pl-1">
+			<div class="col">
 				{% include 'fields/base.html' with field=form.last_name %}
 			</div>
 		</div>
 
-		{% include 'fields/base.html' with field=form.username %}
+		{% include 'fields/base.html' with field=form.username class_group="mt-0" %}
 
-		{% include 'fields/base.html' with field=form.email %}
+		{% include 'fields/base.html' with field=form.email class_group="mb-0" %}
 
-		<div class="row">
-			<div class="col-6 pr-1">
+		<div class="form-row">
+			<div class="col">
 				{% include 'fields/base.html' with field=form.password1 %}
 			</div>
-			<div class="col-6 pl-1">
+			<div class="col">
 				{% include 'fields/base.html' with field=form.password2 %}
 			</div>
 		</div>
 
-        <div class="pt-4">
+        <div class="pt-2">
 			{% include 'fields/button/submit.html' with message="Sign Up" %}
 		</div>
     </form>

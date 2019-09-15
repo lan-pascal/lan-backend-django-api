@@ -10,28 +10,24 @@
 
         <!--content-->
         <div class="row justify-content-center">
-          <div class="col-6">
-            <div class="row justify-content-center">
-              <span class="text-nowrap">
-                <div class="card border shadow-none" style="width:375px">
-                  <div class="text-wrap">
-                    {% block alert %}{% endblock %}
-                  </div>
-                  <div class="card-title text-center mt-3 mb-0">
-                    <h1>{% block content_title %}as{% endblock %}</h1>
-                  </div>
-                  <div class="card-body px-5 pt-0 pb-4">
-                    <div class="text-wrap">
-                      {% block content %}{% endblock %}
-                    </div>
-                  </div>
+          <span class="text-nowrap">
+            <div class="card border shadow-none">
+              <div class="text-wrap">
+                {% block alert %}{% endblock %}
+              </div>
+              <div class="card-title text-center mt-3 mb-0">
+                <h1>{% block content_title %}{{title}}{% endblock %}</h1>
+              </div>
+              <div class="card-body px-5 pt-0 pb-4">
+                <div class="text-wrap">
+                  {% block content %}{% endblock %}
                 </div>
-              </span>
+              </div>
             </div>
-          </div>
+          </span>
         </div>
+    </div>
 
         <!--footer-->
-    </div>
   </div>
 {% endblock %}

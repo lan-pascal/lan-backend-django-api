@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}{{site_name}}{% endblock %}</title>
+    <title>{% block title %}{{title}}{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
@@ -16,14 +16,12 @@
     {% load static %}
     <link rel="stylesheet" type="text/css"href="{% static "css/styles.css" %}">
 
-    {% block head %} {% endblock%}
+    
   </head>
 
   <body>
     {% block body %} {% endblock %}
 
-    {% block script %} {% endblock %}
-    
     <!-- JQuery -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Bootstrap tooltips -->
@@ -32,5 +30,9 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.8/js/mdb.min.js"></script>
+    
+    <script type="text/javascript" src={% static "js/utils.js" %}></script>
+    
+    {% block script %} {% endblock %}
   </body>
 </html>

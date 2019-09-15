@@ -47,7 +47,20 @@
 }
 
 /* Twitter */
-
 .fa-google {
     background: #DB4437;
+}
+
+.switch {
+    display: none
+}
+
+.switch.show {
+    display: contents
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }

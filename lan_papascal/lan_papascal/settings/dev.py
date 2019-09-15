@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'widget_tweaks',
     'social_django',
+    'simple_email_confirmation',
 
 
     #Django

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'oauth2_provider',
     'widget_tweaks',
+    'social_django',
 
 
     #Django
@@ -64,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'lan_papascal.urls'
@@ -79,6 +82,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                #Social Django
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -143,7 +150,7 @@ STATICFILES_DIRS = [
 #Django REST Framework
 REST_FRAMEWORK = {}
 
-# Django OAuth Toolkit
+# Django REST Framework: OAuth Toolkit
 REST_FRAMEWORK.update({
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
@@ -154,7 +161,7 @@ REST_FRAMEWORK.update({
     )
 })
 
-#Django Rest Framework Json API
+#Django Rest Framework: Json API
 REST_FRAMEWORK.update({
     'PAGE_SIZE': 10,
     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
@@ -183,7 +190,7 @@ REST_FRAMEWORK.update({
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json'
 })
 
-#Setup of Django Oauth Toolkit
+#Django Oauth Toolkit
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
@@ -191,6 +198,9 @@ OAUTH2_PROVIDER = {
 
 
 AUTHENTICATION_BACKENDS = ( 
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+
     'django.contrib.auth.backends.ModelBackend',
     'oauth2_provider.backends.OAuth2Backend',
 )
@@ -203,5 +213,34 @@ CLIENT_SECRET = os.environ["CLIENT_SECRET"]
 BASE_URL = "http://localhost:8000"
 
 LOGIN_URL = "/registration/signin/"
-
 LOGIN_REDIRECT_URL ="/"
+
+#Python Social Auth
+
+##PIPELINE
+SOCIAL_AUTH_PIPELINE = [
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+]
+
+##FACEBOOK
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ["FACEBOOK_APP_KEY"]
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ["FACEBOOK_APP_SECRET"]
+SOCIAL_AUTH_FACEBOOK_APP_NAMESPACE = ""
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email', 
+}
+
+##GOOGLE
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ["GOOGLE_OAUTH2_KEY"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["GOOGLE_OAUTH2_SECRET"]
+

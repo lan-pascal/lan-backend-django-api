@@ -4,12 +4,11 @@ from django.contrib.auth import views as django_views
 from . import views
 
 urlpatterns = [
+    #Basic
     path('signin/', views.SignInView.as_view(), name='signin'),
     path('signout/', django_views.LogoutView.as_view(template_name='registration/signout.html'), name='signout'),
     path('signup/', views.SignUpView.as_view(), name='signup'),
-
-    path('password/change/', django_views.PasswordChangeView.as_view(), name='password_change'),
-    path('password/change/done/', django_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('signup/done', views.SignUpDoneView.as_view(),  name="signup_done"),
 
     path(
         'password/reset/', 

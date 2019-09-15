@@ -18,14 +18,6 @@ class SignUpForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['password2'].label = "Confirmation"
 
-    def process_authenticate(self):
-        username = self.cleaned_data.get("username")
-        password = self.cleaned_data.get("password1")
-        self.user = authenticate(self.request,username=username,password=password)
-
-    def get_user(self):
-        return self.user
-
 class SignInForm(AuthenticationForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)

@@ -10,18 +10,34 @@ from django.contrib.auth import (
 from . import forms
 
 # Create your views here.
-class SignUpView(LoginView):
+class SignUpView(views.FormView):
     form_class = forms.SignUpForm
     template_name = 'registration/signup.html'
+    title = "Sign Up"
 
-    def form_valid(self, form):
-        """Security check complete. Log the user in."""
-        form.save()
-        form.process_authenticate()
-        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'title': self.title
+        })
+        return context
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs        
 
 
-class SignInView(LoginView):
+class SignInView(views.LoginView):
     form_class = forms.SignInForm
     template_name='registration/signin.html'
     redirect_authenticated_user=True
+    title = 'Sign In'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'title': self.title,
+            **(self.extra_context or {})
+        })
+        return context

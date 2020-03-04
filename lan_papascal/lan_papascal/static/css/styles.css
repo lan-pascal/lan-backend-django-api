@@ -46,10 +46,15 @@
     background: #3B5998;
 }
 
-/* Twitter */
+/* Google */
 .fa-google {
     background: #DB4437;
 }
+
+.fa-twitter {
+    background: #1da1f2;
+}
+
 
 .switch {
     display: none

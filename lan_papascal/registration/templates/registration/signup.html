@@ -1,0 +1,62 @@
+{% extends 'registration/base.html' %}
+
+{% block content_title %}{% block title %}Sign Up{% endblock %}{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        {% url 'social:begin' 'google-oauth2' as link_google %}
+        {% include 'fields/button/link/icon.html' with class_icon="fab fa-2x fa-google" link=link_google %}
+
+        {% url 'social:begin' 'facebook' as link_facebook %}
+        {% include 'fields/button/link/icon.html' with class_icon="fab fa-2x fa-facebook" link=link_facebook %}
+    </div>
+    <hr/>
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+        {% endfor %}
+
+		<div class="form-row">
+			<div class="col-sm-4">
+				{% include 'fields/base.html' with field=form.first_name%}
+			</div>
+
+			<div class="col-sm-4">
+				{% include 'fields/base.html' with field=form.last_name %}
+			</div>
+		</div>
+
+		<div class="form-row">
+			<div class="col-8">
+				{% include 'fields/base.html' with field=form.username %}
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="col-8">
+				{% include 'fields/base.html' with field=form.email%}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-4">
+				{% include 'fields/base.html' with field=form.password1 %}
+			</div>
+			<div class="col-sm-4">
+				{% include 'fields/base.html' with field=form.password2 %}
+			</div>
+		</div>
+
+		<div class="form-row">
+        <div class="col-sm-6 col-12 pt-2 self-align-center">
+			{% include 'fields/button/submit.html' with message="Sign Up" %}
+		</div>
+		</div>
+    </form>
+	<hr/>
+	<div class="text-center">
+		{% url 'signin' as link%}
+		{% include 'fields/button/link/text.html' with link=link message="Already have an account? Sign in! " %}
+	</div>
+{% endblock %}

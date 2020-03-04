@@ -1,0 +1,14 @@
+{% extends 'registration/base.html' %}
+
+{% block content %}
+    <div class="text-center">
+    {% if email.is_expire %}
+        <p>Sorry, this link has expired. Please contact the administrators of this website.</p>
+    {% else %}
+        <p>An email was sent to {{ email }}. You need to activate your email to be logged.</p>
+        <p>Also, it is possible that some feature will be deactivated. Some feature are disable because we have a limit of place and it's made for our community.</p>
+        <p>For more detail, please refer to lan... or our facebook page.</p>
+        <p>Have fun!</p>
+    {% endif %}
+    </div>
+{% endblock %}

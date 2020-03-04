@@ -19,9 +19,17 @@ from django.urls import path, include
 
 
 urlpatterns = [
+    #Django
     path('admin/', admin.site.urls),
-    path('auth/', include('rest_framework.urls', namespace='rest_framework')),
+    
+    #Apps
+    path('registration/', include('registration.urls')),
+    
+    #Plugins
     path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path('social/', include('social_django.urls', namespace='social')),
+
+    #API
     path('account/',include('account.api.urls')),
-    path('schema/',include('schema.urls'))
+    path('schema/',include('schema.urls')),
 ]

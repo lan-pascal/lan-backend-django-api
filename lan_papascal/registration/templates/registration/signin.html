@@ -1,0 +1,60 @@
+{% extends "registration/base.html" %}
+
+{% block alert %}
+    {% if form.errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if next %}
+        <div class="alert alert-info">
+            {% if user.is_authenticated %}
+                Your account doesn't have access to this page. To proceed,
+                please sign in with an account that has access.
+            {% else %}
+                    Please sign in to see this page.
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content_title %}{% block title %}Sign In{% endblock %}{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        {% url 'social:begin' 'google-oauth2' as link_google %}
+        {% include 'fields/button/link/icon.html' with class_icon="fab fa-2x fa-google" link=link_google %}
+
+        {% url 'social:begin' 'facebook' as link_facebook %}
+        {% include 'fields/button/link/icon.html' with class_icon="fab fa-2x fa-facebook" link=link_facebook %}
+    </div>
+    <hr/> 
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        {% for field in form.visible_fields %}
+            {% include 'fields/base.html' with field=field %}
+        {% endfor %}
+
+        <div>
+            {% url 'password_reset' as link%}
+            {% include 'fields\button\link\text.html' with link=link message="Forgot Password?" %}
+        </div>
+
+        <div class="pt-4">
+            {% include 'fields/button/submit.html' with message="Sign In"%}
+        </div>
+        <hr/>
+        <div class="text-center">
+            {% url 'signup' as link%}
+            {% include 'fields\button\link\text.html' with link=link message="Create an account" %}
+        </div>
+    </form>
+{% endblock %}

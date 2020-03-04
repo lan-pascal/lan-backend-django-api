@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'social_django',
     'simple_email_confirmation',
-
+    'django_registration',
 
     #Django
     'django.contrib.admin',
@@ -123,6 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 AUTH_USER_MODEL = 'account.User'
 
 # Internationalization
@@ -206,12 +207,13 @@ AUTHENTICATION_BACKENDS = (
     'oauth2_provider.backends.OAuth2Backend',
 )
 
+#DJANGO REGISTRATION
+
+ACCOUNT_ACTIVATION_DAYS = 7
+
 #Own setting KEEP PRIVATE!
 CLIENT_ID = os.environ["CLIENT_ID"]
-
 CLIENT_SECRET = os.environ["CLIENT_SECRET"]
-
-BASE_URL = "http://localhost:8000"
 
 LOGIN_URL = "/registration/signin/"
 LOGIN_REDIRECT_URL ="/"

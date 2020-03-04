@@ -21,7 +21,7 @@
     {% endif %}
 {% endblock %}
 
-{% block content_title %}{% block title %}Sign In{% endblock %}{% endblock %}
+{% block content_title %}{% block title %}{{title}}{% endblock %}{% endblock %}
 
 {% block content %}
     <div class="row justify-content-center">
@@ -30,6 +30,9 @@
 
         {% url 'social:begin' 'facebook' as link_facebook %}
         {% include 'fields/button/link/icon.html' with class_icon="fab fa-2x fa-facebook" link=link_facebook %}
+        
+        {% url 'social:begin' 'twitter' as link_twitter %}
+        {% include 'fields/button/link/icon.html' with class_icon="fab fa-2x fa-twitter" link=link_twitter %}
     </div>
     <hr/> 
     <form method="post" novalidate>

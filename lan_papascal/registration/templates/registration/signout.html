@@ -1,6 +1,6 @@
 {% extends "registration/base.html" %}
 
-{% block content_title %}{% block title %}Sign Out{% endblock %}{% endblock %}
+{% block content_title %}{% block title %}{{ title }}{% endblock %}{% endblock %}
 
 {% block content %}
   {% url 'signin' as link %}

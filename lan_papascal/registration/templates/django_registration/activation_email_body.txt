@@ -1,0 +1,18 @@
+{% extends "email_basic.html" %}
+
+{% block content %}
+
+    {% url 'django_registration_activate' activation_key=activation_key as activate_url %}
+
+    <div>
+        <p>You have recently made a request to activate your account for {{site.name}}.</p>
+        <p>Please confirm by clicking or Copy-Paste this link:</p>
+    
+        <a>
+            {{ site.domain }}{{ activate_url }}
+        </a>
+    
+        <p> If you didn't activate an account with us, please ignore this message safely. </p>
+    </div>
+    
+{% endblock %}
